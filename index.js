@@ -8,11 +8,7 @@ class Route{
 		this.router = router;
 		this.name = name;
 		this.keys = [];
-		this.regexp = toRegexp(path,this.keys);
-		if(next && next){
-			this.regexp = this.regexp+"";
-			this.regexp = new RegExp(this.regexp.substr(1,this.regexp.length-4)+"(.*)$","i");
-		}
+		this.regexp = toRegexp(path+(next?"/(.*)?":""),this.keys);
 		if(next) this.next = next;
 		if(query) this.query = query;
 	}
@@ -26,7 +22,7 @@ class Route{
 			params[this.keys[i].name] = values[i];
 		}
 		params.values = values;
-		params.subPath = this.next?values[values.length-1]:"";
+		params.subPath = this.next?values[values.length-1]||"":"";
 		if(params.subPath.length && !params.subPath.startsWith("/")) params.subPath = "/"+params.subPath;
 		params.path = path.slice(0,path.length-params.subPath.length);
 		return params;
