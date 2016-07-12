@@ -61,7 +61,7 @@ class RootComponent extends react.Component{
 		this.path = "";
 		this.params = {};
 		this.subPath = location.pathname;
-		this.query = qs.parse(location.search);
+		this.query = qs.parse(location.search.substr(1));
 		this.root = this;
 		window.onpopstate = function(){
 			this.forceUpdate();
@@ -74,7 +74,7 @@ class RootComponent extends react.Component{
 	}
 	render(){
 		this.subPath = location.pathname;
-		this.query = qs.parse(location.search);
+		this.query = qs.parse(location.search.substr(1));
 		class Mounter extends react.Component{
 			render(){
 				return this.props.route.render();
