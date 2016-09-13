@@ -123,12 +123,20 @@ class Location extends react.Component{
 	transition(replace,path,query){
 		var route = this.route.next.router.route(path);
 		if(!route) throw new Error("path '"+path+"' does not match any routes");
-		for(var key in query){
-			if(!route.query[key]) throw new Error("query key '"+key+"' is not allowed for this route");
+		var fullQuery = {};
+		var subPath = path;
+		while(true){
+			for(var key in route.query){
+				fullQuery[key] = query[key];
+			}
+			if(!route.next) break;
+			subPath = route.match(subPath).subPath;
+			route = route.next.router.route(subPath);
 		}
+
 		this.parentSubPath = path;
 		this.parseParams();
-		this.query = query;
+		this.query = fullQuery;
 
 		var path = [path];
 		var location = this.context.location;
@@ -137,7 +145,11 @@ class Location extends react.Component{
 			location = location.context.location;
 		}
 		path = path.join("");
-		query = qs.stringify(Object.assign({},this.root.query,this.query));
+		query = Object.assign({},this.root.query,this.query);
+		for(var key in query){
+			if(query[key] === undefined) delete query[key]
+		}
+		query = qs.stringify(query);
 		history[replace?"replaceState":"pushState"](null,null,path+(query.length?("?"+query):""));
 		this.forceUpdate();
 	}
