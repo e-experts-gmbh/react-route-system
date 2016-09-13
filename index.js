@@ -121,6 +121,7 @@ class Location extends react.Component{
 	}
 
 	transition(replace,path,query){
+		query = query||{}
 		var route = this.route.next.router.route(path);
 		if(!route) throw new Error("path '"+path+"' does not match any routes");
 		var fullQuery = {};
