@@ -60,8 +60,6 @@ class RootComponent extends react.Component{
 		super(props,context);
 		this.path = "";
 		this.params = {};
-		this.subPath = location.pathname;
-		this.query = qs.parse(location.search.substr(1));
 		this.root = this;
 		window.onpopstate = function(){
 			this.forceUpdate();
@@ -72,15 +70,28 @@ class RootComponent extends react.Component{
 			location:this
 		}
 	}
+
 	render(){
-		this.subPath = location.pathname;
-		this.query = qs.parse(location.search.substr(1));
+		var query = qs.parse(location.search.substr(1));
+		var subPath = location.pathname;
+		this.subPath = subPath;
+		this.query = {};
+
 		class Mounter extends react.Component{
 			render(){
 				return this.props.route.render();
 			}
 		}
 		Mounter.router = new Router().add("","",this.props.component);
+		var route = Mounter.router.routes[0];
+		while(true){
+			for(var key in route.query){
+				this.query[key] = query[key];
+			}
+			if(!route.next) break;
+			subPath = route.match(subPath).subPath;
+			route = route.next.router.route(subPath);
+		}
 		return react.createElement(Mounter,{location:this,params:this.params,route:Mounter.router.routes[0]});
 	}
 }
@@ -160,8 +171,6 @@ class Location extends react.Component{
 	replace(path,query){
 		this.transition(true,path,query);
 	}
-
-
 }
 Location.contextTypes = {
 	location:react.PropTypes.object
