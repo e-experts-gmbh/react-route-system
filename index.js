@@ -157,12 +157,12 @@ class Location extends react.Component{
 			location = location.context.location;
 		}
 		path = path.join("");
-		query = Object.assign({},this.root.query,this.query);
-		for(var key in query){
-			if(query[key] === undefined) delete query[key]
+		this.root.query = Object.assign({},this.root.query,this.query);
+		for(var key in this.root.query){
+			if(this.root.query[key] === undefined) delete this.root.query[key]
 		}
-		query = qs.stringify(query);
-		history[replace?"replaceState":"pushState"](null,null,path+(query.length?("?"+query):""));
+		var queryString = qs.stringify(this.root.query);
+		history[replace?"replaceState":"pushState"](null,null,path+(queryString.length?("?"+queryString):""));
 		this.forceUpdate();
 	}
 	push(path,query){
