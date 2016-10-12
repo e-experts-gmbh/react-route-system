@@ -64,6 +64,11 @@ class RootComponent extends react.Component{
 		window.onpopstate = function(){
 			this.forceUpdate();
 		}.bind(this)
+		this.Mounter = class Mounter extends react.Component{
+			render(){
+				return this.props.route.render();
+			}
+		}
 	}
 	getChildContext(){
 		return {
@@ -76,14 +81,8 @@ class RootComponent extends react.Component{
 		var subPath = location.pathname;
 		this.subPath = subPath;
 		this.query = {};
-
-		class Mounter extends react.Component{
-			render(){
-				return this.props.route.render();
-			}
-		}
-		Mounter.router = new Router().add("","",this.props.component);
-		var route = Mounter.router.routes[0];
+		this.Mounter.router = new Router().add("","",this.props.component);
+		var route = this.Mounter.router.routes[0];
 		while(true){
 			for(var key in route.query){
 				this.query[key] = query[key];
@@ -92,7 +91,7 @@ class RootComponent extends react.Component{
 			subPath = route.match(subPath).subPath;
 			route = route.next.router.route(subPath);
 		}
-		return react.createElement(Mounter,{location:this,params:this.params,route:Mounter.router.routes[0]});
+		return react.createElement(this.Mounter,{location:this,params:this.params,route:this.Mounter.router.routes[0]});
 	}
 }
 
