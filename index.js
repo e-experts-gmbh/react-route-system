@@ -150,12 +150,21 @@ class Location extends react.Component{
 		this.query = fullQuery;
 
 		var path = [path];
+		var keys = [];
 		var location = this.context.location;
 		while(location){
 			path.unshift(location.path);
+			if(location.route){
+				for(var key in location.route.query){
+					keys.push(key);
+				}
+			}
 			location = location.context.location;
 		}
 		path = path.join("");
+		for(var key in this.root.query){
+			if(keys.indexOf(key) < 0) delete this.root.query[key];
+		}
 		this.root.query = Object.assign({},this.root.query,this.query);
 		for(var key in this.root.query){
 			if(this.root.query[key] === undefined) delete this.root.query[key]
