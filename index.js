@@ -113,7 +113,7 @@ class Location extends react.Component{
 
 	parseParams(){
 		this.subRoute = this.route.next.router.route(this.parentSubPath!==undefined?this.parentSubPath:this.context.location.subPath);
-		this.params = this.subRoute.match(this.parentSubPath||this.context.location.subPath);
+		this.params = this.subRoute.match(this.parentSubPath!==undefined?this.parentSubPath:this.context.location.subPath);
 		this.path = this.params.path;
 		this.subPath = this.params.subPath;
 		this.query = {};
