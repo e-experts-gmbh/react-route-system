@@ -2,6 +2,7 @@
 var toRegexp = require("path-to-regexp");
 var react = require("react");
 var qs = require("querystring");
+var PropTypes = require("prop-types");
 
 class Route{
 	constructor(router,name,path,next,query){
@@ -96,7 +97,7 @@ class RootComponent extends react.Component{
 }
 
 RootComponent.childContextTypes = {
-	location: react.PropTypes.object
+	location: PropTypes.object
 }
 
 class Location extends react.Component{
@@ -184,10 +185,10 @@ class Location extends react.Component{
 	}
 }
 Location.contextTypes = {
-	location:react.PropTypes.object
+	location:PropTypes.object
 }
 Location.childContextTypes = {
-	location:react.PropTypes.object
+	location:PropTypes.object
 }
 
 exports.RootComponent = RootComponent;
