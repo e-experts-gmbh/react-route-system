@@ -139,40 +139,25 @@ class Location extends react.Component{
 		var subPath = path;
 		while(true){
 			for(var key in route.query){
-				fullQuery[key] = query[key];
+				if(query.hasOwnProperty(key)) fullQuery[key] = query[key];
 			}
 			if(!route.next) break;
 			subPath = route.match(subPath).subPath;
 			route = route.next.router.route(subPath);
 		}
 
-		this.parentSubPath = path;
-		this.parseParams();
-		this.query = fullQuery;
-
-		var path = [path];
-		var keys = [];
 		var location = this.context.location;
-		while(location){
-			path.unshift(location.path);
-			if(location.route){
-				for(var key in location.route.query){
-					keys.push(key);
-				}
+		while(location != this.root){
+			path = location.path+path;
+			for(var key in location.query){
+				fullQuery[key] = location.query[key];
 			}
-			location = location.context.location;
+			location = location.context.location
 		}
-		path = path.join("");
-		for(var key in this.root.query){
-			if(keys.indexOf(key) < 0) delete this.root.query[key];
-		}
-		this.root.query = Object.assign({},this.root.query,this.query);
-		for(var key in this.root.query){
-			if(this.root.query[key] === undefined) delete this.root.query[key]
-		}
-		var queryString = qs.stringify(this.root.query);
+
+		var queryString = qs.stringify(fullQuery);
 		history[replace?"replaceState":"pushState"](null,null,path+(queryString.length?("?"+queryString):""));
-		this.forceUpdate();
+		this.root.forceUpdate();
 	}
 	push(path,query){
 		this.transition(false,path,query);
