@@ -150,6 +150,7 @@ class Location extends react.Component{
 		while(location != this.root){
 			path = location.path+path;
 			for(var key in location.query){
+				if(location.query[key] === undefined) continue;
 				fullQuery[key] = location.query[key];
 			}
 			location = location.context.location
