@@ -104,9 +104,9 @@ class Location extends react.Component{
 	constructor(props,context){
 		super(props,context);
 		this.root = this.context.location.root;
-		this.componentWillReceiveProps(props);
+		this.UNSAFE_componentWillReceiveProps(props);
 	}
-	componentWillReceiveProps(props){
+	UNSAFE_componentWillReceiveProps(props){
 		delete this.parentSubPath;
 		this.route = props.route;
 		this.parseParams();
