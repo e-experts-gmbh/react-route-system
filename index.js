@@ -30,7 +30,7 @@ class Route{
 	}
 
 	render(props){
-		return react.createElement(Location,{ref:"location",props:props,route:this});
+		return react.createElement(Location,{props:props,route:this});
 	}
 }
 
