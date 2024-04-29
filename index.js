@@ -30,7 +30,7 @@ class Route{
 	}
 
 	render(props){
-		return react.createElement(Location,{props:props,route:this});
+		return react.createElement(Location,{props:props,route:this,ref:r=>this.location=r});
 	}
 }
 
@@ -128,7 +128,7 @@ class Location extends react.Component{
 		}
 	}
 	render(){
-		return react.createElement(this.route.next,Object.assign({},this.props.props,{location:this,params:this.params,route:this.subRoute,query:this.query}));
+		return react.createElement(this.route.next,Object.assign({},this.props.props,{location:this,params:this.params,route:this.subRoute,query:this.query,ref:r=>this.view=r}));
 	}
 
 	transition(replace,path,query){
